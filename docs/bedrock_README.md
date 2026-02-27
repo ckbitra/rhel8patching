@@ -15,6 +15,17 @@ The main Bedrock usage is inside an SSM Run Command document defined in `modules
 
 Patch logs are stored in S3 under the prefix `bedrock-patch/{env}`.
 
+# IAM Permissions
+
+Two IAM roles have Bedrock access:
+
+- **ssm_bedrock_role** — used by the SSM maintenance window task, scoped to the specific Claude model ARN
+- **patch_insights_lambda_role** — used by the Lambda, currently with broad Resource = "*" scope (noted as something to tighten)
+
+Both roles allow:
+- `bedrock:InvokeModel`
+- `bedrock:InvokeModelWithResponseStream`.
+
 | File | Role |
 |------------------------------|--------------------------------------------------|
 | modules/patch-manager/main.tf | Core Bedrock integration (SSM doc, IAM roles) |
