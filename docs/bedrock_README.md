@@ -14,3 +14,11 @@ The main Bedrock usage is inside an SSM Run Command document defined in `modules
 6. Runs a verification `dnf check-update --security`
 
 Patch logs are stored in S3 under the prefix `bedrock-patch/{env}`.
+
+| File | Role |
+|------------------------------|--------------------------------------------------|
+| modules/patch-manager/main.tf | Core Bedrock integration (SSM doc, IAM roles) |
+| iam.tf | Lambda IAM role with Bedrock permissions |
+| main.tf | Lambda function (placeholder Bedrock code) |
+| variables.tf | S3 bucket variable for SSM/Bedrock logs |
+| docs/README.md | Architecture documentation |
