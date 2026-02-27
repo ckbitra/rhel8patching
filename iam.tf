@@ -46,4 +46,32 @@ resource "aws_iam_role_policy_attachment" "lambda_basic_logging" {
 }
 
 
-/* add any other inline policies or attachments your lambda needs */
+# Bedrock invoke + S3 write permissions for the patch-insights Lambda
+resource "aws_iam_role_policy" "lambda_bedrock_s3" {
+  name = "${var.environment}-patch-insights-bedrock-s3"
+  role = aws_iam_role.lambda_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "BedrockInvokeModel"
+        Effect = "Allow"
+        Action = [
+          "bedrock:InvokeModel",
+          "bedrock:InvokeModelWithResponseStream"
+        ]
+        Resource = "arn:aws:bedrock:${var.region}::foundation-model/anthropic.claude-3-5-sonnet-20240620-v1:0"
+      },
+      {
+        Sid    = "S3WriteReports"
+        Effect = "Allow"
+        Action = [
+          "s3:PutObject",
+          "s3:GetObject"
+        ]
+        Resource = "arn:aws:s3:::${var.environment}-rhel8-patch-logs-*/*"
+      }
+    ]
+  })
+}
