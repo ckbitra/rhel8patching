@@ -7,6 +7,24 @@ Decide if reboot required (kernel update → yes)
 How to check if reboot is required
 How to list only CVE numbers
 How to automate security-only patching safely in RHEL8
+
+####
+| #  | Category                           | Position in risk ranking                                                                    |
+| -- | ---------------------------------- | ------------------------------------------------------------------------------------------- |
+| 1  | Enhancement (RHEA)                 | Safest                                                                                      |
+| 2  | Bug Fix (RHBA)                     |                                                                                             |
+| 3  | Security – userland (RHBA)         |                                                                                             |
+| 4  | Package Dependency Updates         |                                                                                             |
+| 5  | Module Stream Updates              |                                                                                             |
+| 6  | Extended Lifecycle / EUS           | Meta: same risk as underlying patch type, higher operational complexity                     |
+| 7  | Firmware / Microcode               |                                                                                             |
+| 8  | Live Kernel Patches (kpatch)       |                                                                                             |
+| 9  | Kernel Updates                     |                                                                                             |
+| 10 | Critical Infrastructure Components | Cross-cutting: bash → sudo → systemd → openssl → glibc → kernel (risk rises with component) |
+###
+
+Safest: RHEA (enhancements) → RHBA (bug fixes) → RHSA (non‑kernel security).
+Hardest: Kernel updates, then kpatch, then firmware/microcode, then module streams and dependency updates.
 -----------
 On **Red Hat Enterprise Linux 8**, patches are delivered as **RPM package updates** via `dnf`, and they are categorized mainly by **advisory type** and sometimes by **update impact**.
 
