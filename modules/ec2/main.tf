@@ -22,6 +22,7 @@ resource "aws_instance" "rhel8" {
   vpc_security_group_ids      = [var.security_group_id]
   associate_public_ip_address = true
   iam_instance_profile        = aws_iam_instance_profile.ssm.name
+  key_name                    = var.key_name
 
   root_block_device {
     volume_size = 10

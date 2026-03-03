@@ -31,6 +31,12 @@ variable "instance_roles" {
   }
 }
 
+variable "ssh_key_name" {
+  description = "Existing SSH key pair name in AWS. If empty, a new key will be created and saved to {environment}-rhel8-key.pem"
+  type        = string
+  default     = ""
+}
+
 variable "s3_bucket_name" {
   description = "Name of the S3 bucket used for SSM/Bedrock logs"
   type        = string

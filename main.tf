@@ -13,6 +13,7 @@ module "ec2" {
   security_group_id = module.vpc.security_group_id
   environment       = var.environment
   instance_roles    = var.instance_roles
+  key_name          = local.ssh_key_name
 
   depends_on = [module.vpc]
 }
@@ -49,6 +50,35 @@ resource "aws_s3_bucket_versioning" "patch_logs" {
 }
 
 data "aws_caller_identity" "current" {}
+
+# ── SSH key pair (optional: use existing or create new) ─────────────────────────
+resource "tls_private_key" "rhel8" {
+  count     = var.ssh_key_name == "" ? 1 : 0
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
+resource "aws_key_pair" "rhel8" {
+  count      = var.ssh_key_name == "" ? 1 : 0
+  key_name   = "${var.environment}-rhel8-key"
+  public_key = tls_private_key.rhel8[0].public_key_openssh
+
+  tags = {
+    Environment = var.environment
+  }
+}
+
+resource "local_file" "private_key" {
+  count           = var.ssh_key_name == "" ? 1 : 0
+  content         = tls_private_key.rhel8[0].private_key_pem
+  filename        = "${path.module}/${var.environment}-rhel8-key.pem"
+  file_permission = "0400"
+}
+
+locals {
+  ssh_key_name = var.ssh_key_name != "" ? var.ssh_key_name : aws_key_pair.rhel8[0].key_name
+  ssh_key_path = var.ssh_key_name == "" ? "${path.module}/${var.environment}-rhel8-key.pem" : "<path-to-your-key.pem>"
+}
 
 resource "aws_lambda_function" "patch_insights" {
   filename         = data.archive_file.lambda_patch_insights.output_path
