@@ -62,7 +62,7 @@ resource "aws_iam_role_policy" "lambda_bedrock_s3" {
           "bedrock:InvokeModelWithResponseStream"
         ]
         Resource = [
-          "arn:aws:bedrock:${var.region}::foundation-model/anthropic.claude-3-5-sonnet-*",
+          "arn:aws:bedrock:*::foundation-model/anthropic.claude-3-5-sonnet-*",
           "arn:aws:bedrock:*:*:inference-profile/us.anthropic.claude-3-5-sonnet-*"
         ]
       },
