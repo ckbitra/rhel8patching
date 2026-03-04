@@ -61,7 +61,10 @@ resource "aws_iam_role_policy" "lambda_bedrock_s3" {
           "bedrock:InvokeModel",
           "bedrock:InvokeModelWithResponseStream"
         ]
-        Resource = "arn:aws:bedrock:${var.region}::foundation-model/anthropic.claude-3-5-sonnet-20240620-v1:0"
+        Resource = [
+          "arn:aws:bedrock:${var.region}::foundation-model/anthropic.claude-3-5-sonnet-*",
+          "arn:aws:bedrock:*:*:inference-profile/us.anthropic.claude-3-5-sonnet-*"
+        ]
       },
       {
         Sid    = "S3WriteReports"
