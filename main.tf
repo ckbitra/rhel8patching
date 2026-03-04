@@ -93,7 +93,7 @@ resource "aws_lambda_function" "patch_insights" {
   environment {
     variables = {
       LOG_BUCKET    = aws_s3_bucket.patch_logs.id
-      BEDROCK_MODEL = "us.anthropic.claude-3-5-sonnet-20241022-v2:0"
+      BEDROCK_MODEL = "us.anthropic.claude-sonnet-4-6"
       REGION        = var.region
       ENVIRONMENT   = var.environment
     }
@@ -191,7 +191,7 @@ Rules:
 - Do NOT include markdown fences or any text outside the JSON object.
 """
 
-    # ── 3. Invoke Bedrock (Claude 3.5 Sonnet) ────────────────────────────────
+    # ── 3. Invoke Bedrock (Claude Sonnet 4.6) ─────────────────────────────────
     bedrock_response = bedrock.invoke_model(
         modelId     = BEDROCK_MODEL,
         contentType = "application/json",
