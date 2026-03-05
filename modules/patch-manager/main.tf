@@ -79,7 +79,7 @@ resource "aws_iam_role_policy" "bedrock_access" {
         "bedrock:InvokeModel",
         "bedrock:InvokeModelWithResponseStream"
       ]
-      Resource = "arn:aws:bedrock:${var.region}::foundation-model/anthropic.claude-3-5-sonnet-20240620-v1:0"
+      Resource = "arn:aws:bedrock:${var.region}:*:inference-profile/us.anthropic.claude-sonnet-4-6"
     }]
   })
 }
@@ -117,7 +117,7 @@ resource "aws_ssm_document" "bedrock_rhel8_patch" {
 
   content = jsonencode({
     schemaVersion = "2.2"
-    description   = "Bedrock Claude 3.5 Sonnet RHEL8 patching"
+    description   = "Bedrock Claude Sonnet 4.6 RHEL8 patching"
     mainSteps = [{
       action = "aws:runShellScript"
       name   = "bedrockPatch"
@@ -136,9 +136,9 @@ resource "aws_ssm_document" "bedrock_rhel8_patch" {
           "4. Install if safe",
           "5. Output ONLY bash commands, no explanations",
           "EOF",
-          # Invoke Claude 3.5 Sonnet via Bedrock
+          # Invoke Claude Sonnet 4.6 via Bedrock (inference profile)
           "aws bedrock-runtime invoke-model \\",
-          "  --model-id anthropic.claude-3-5-sonnet-20240620-v1:0 \\",
+          "  --model-id us.anthropic.claude-sonnet-4-6 \\",
           "  --body '{\"anthropic_version\":\"bedrock-2023-05-31\",\"max_tokens\":1000,\"messages\":[{\"role\":\"user\",\"content\":[{\"type\":\"text\",\"text\":\"$$(cat /tmp/bedrock_prompt.txt)\"}]}]}' \\",
           "  /tmp/bedrock_response.json",
           "jq -r '.content[0].text' /tmp/bedrock_response.json > /tmp/patch_commands.sh",
